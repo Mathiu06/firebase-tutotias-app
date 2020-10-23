@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:friendlychat/pages/home_page.dart';
 import 'package:friendlychat/service/authentication.dart';
 
 import 'chat_screen.dart';
@@ -84,7 +85,7 @@ class _RootPageState extends State<RootPage> {
         break;
       case AuthStatus.LOGGED_IN:
         if (_userId.length > 0 && _userId != null) {
-          return ChatScreen(
+          return HomePage(
             'Friendly Chat',
             auth: widget.auth,
             onSignedOut: _onSignedOut,

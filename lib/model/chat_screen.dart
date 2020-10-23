@@ -1,25 +1,28 @@
 import 'dart:io';
-
-import 'package:firebase_database/firebase_database.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:friendlychat/model/chat_message.dart';
-import 'package:friendlychat/service/authentication.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/cupertino.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:uuid/uuid.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
-const String _name = "Nhan Nguyen";
+import 'package:friendlychat/model/chat_message.dart';
+import 'package:friendlychat/preferencias_usuario/preferencias_usuario.dart';
+import 'package:friendlychat/service/authentication.dart';
+
+const String _name =
+    "Nhan Nguyen"; /////////////////////////////////////////////////////////
 
 class ChatScreen extends StatefulWidget {
-  ChatScreen(String title, {Key key, this.auth, this.userId, this.onSignedOut})
+  ChatScreen(String title, {Key key, this.userId})
       : _title = title,
         super(key: key);
 
   final _title;
-  final BaseAuth auth;
-  final VoidCallback onSignedOut;
+  // final BaseAuth auth;
+  // final VoidCallback onSignedOut;
   final String userId;
 
   @override
@@ -32,6 +35,8 @@ const List<Choice> choices = const <Choice>[
 ];
 
 class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
+  final _prefs = new PreferenciasUsuario();
+
   final _title;
   final List<ChatMessage> _messages;
   final TextEditingController _textController;
@@ -106,17 +111,21 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   void _onMessageAdded(Event event) {
     final text = event.snapshot.value["text"];
+    final de = event.snapshot.value["de"];
     final imageUrl = event.snapshot.value["imageUrl"];
 
-    ChatMessage message = imageUrl == null
-        ? _createMessageFromText(text)
-        : _createMessageFromImage(imageUrl);
+    if (de == "dfsd") {
+      ////////////////////////////////////////////////////////////////////////////
+      ChatMessage message = imageUrl == null
+          ? _createMessageFromText(text)
+          : _createMessageFromImage(imageUrl);
 
-    setState(() {
-      _messages.insert(0, message);
-    });
+      setState(() {
+        _messages.insert(0, message);
+      });
 
-    message.animationController.forward();
+      message.animationController.forward();
+    }
   }
 
   void _handleSubmitted(String text) {
@@ -151,7 +160,10 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
 
   ChatMessage _createMessageFromText(String text) => ChatMessage(
         text: text,
+        // text: 'hola',
         username: _name,
+        de: "HuOqvBJrlrO0q3bgdVG4WMNxWna2",
+        para: "BMIYJzyaaPUdij9cOPXyP6DBsbw2",
         animationController: AnimationController(
           duration: Duration(milliseconds: 180),
           vsync: this,
@@ -161,6 +173,8 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   ChatMessage _createMessageFromImage(String imageUrl) => ChatMessage(
         imageUrl: imageUrl,
         username: _name,
+        de: "HuOqvBJrlrO0q3bgdVG4WMNxWna2",
+        para: "BMIYJzyaaPUdij9cOPXyP6DBsbw2",
         animationController: AnimationController(
           duration: Duration(milliseconds: 90),
           vsync: this,
@@ -170,6 +184,8 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton:
+          FloatingActionButton(onPressed: () => print(_prefs.token)),
       appBar: AppBar(
         title: Text(_title),
         actions: <Widget>[
@@ -225,19 +241,19 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   void _select(Choice choice) {
     switch (choice.title) {
       case 'Sign out':
-        _signOut();
+        // _signOut();
         break;
     }
   }
 
-  void _signOut() async {
-    try {
-      await widget.auth.signOut();
-      widget.onSignedOut();
-    } catch (e) {
-      print(e);
-    }
-  }
+  // void _signOut() async {
+  //   try {
+  //     await widget.auth.signOut();
+  //     widget.onSignedOut();
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
 }
 
 class Choice {

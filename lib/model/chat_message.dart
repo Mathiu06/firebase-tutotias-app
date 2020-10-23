@@ -2,24 +2,30 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 class ChatMessage extends StatelessWidget {
+  final String de;
+  final String para;
   final String text;
   final String imageUrl;
   final String username;
   final AnimationController animationController;
 
   ChatMessage({
+    String de,
+    String para,
     String text,
     String imageUrl,
     String username,
     AnimationController animationController,
-  })  : text = text,
+  })  : de = de,
+        para = para,
+        text = text,
         imageUrl = imageUrl,
         username = username,
         animationController = animationController;
 
   Map<String, dynamic> toMap() => imageUrl == null
-      ? {'text': text, 'username': username}
-      : {'imageUrl': imageUrl, 'username': username};
+      ? {'de': de, 'para': para, 'text': text, 'username': username}
+      : {'de': de, 'para': para, 'imageUrl': imageUrl, 'username': username};
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +46,8 @@ class ChatMessage extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text(username, style: Theme.of(context).textTheme.subhead),
+                    Text(username,
+                        style: Theme.of(context).textTheme.subtitle1),
                     Container(
                       margin: const EdgeInsets.only(top: 5.0),
                       child: imageUrl == null
